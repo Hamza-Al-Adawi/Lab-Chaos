@@ -1,0 +1,751 @@
+:root{
+  --wall:#123540; --wall2:#0b232b; --wall3:#081a20;
+  --bench:#4d3a2a; --bench2:#33251a; --bench3:#5e4835;
+  --bone:#ece4d3; 
+  --dim:#8ba0a8;
+  --amber:#f2a541; --amber2:#c97f1e;
+  --lilac:#b06fd0;
+  --cuprite:#2f8fbf;
+  --danger:#e0523c;
+  --heart:#ff5a6a;
+  --good:#5fd08a;
+  --tox:#a8d84a;
+  --glass:rgba(233,245,250,.16);
+  --card:#14323b;
+  --card2:#0f2831;
+  --line:rgba(236,228,211,.14);
+  --r:14px;
+}
+
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;overscroll-behavior:none}
+body{
+  background:var(--wall3);
+  color:var(--bone);
+  font-family:"Baloo Bhaijaan 2","Segoe UI",Tahoma,system-ui,sans-serif;
+  font-weight:600;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+}
+
+
+button{font-family:inherit;font-weight:700;color:inherit;border:0;background:none;cursor:pointer}
+#app{
+  position:fixed;inset:0;display:flex;flex-direction:column;
+  width: 100%;
+  max-width: 1400px;
+  background:var(--wall3);
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+
+/* ======================================================================
+   HUD / HEADS-UP DISPLAY
+   ----------------------------------------------------------------------
+   The HUD is the persistent information bar at the top of the game.
+   It displays hearts, coins, safety, language and the home control.
+   ====================================================================== */
+/* ---------- HUD ---------- */
+
+#hud{
+  flex:0 0 auto;display:flex;align-items:center;gap:8px;
+  padding:8px 12px;background:var(--wall3);
+  border-bottom:1px solid var(--line);z-index:40;
+}
+.hud-pill{
+  display:flex;align-items:center;gap:5px;
+  background:var(--card2);border:1px solid var(--line);
+  border-radius:999px;padding:4px 10px;font-size:14px;line-height:1;
+}
+.hud-pill .ic{font-size:14px}
+#hearts{display:flex;gap:3px;align-items:center}
+.hp{width:16px;height:16px;transition:transform .25s,opacity .25s}
+.hp.gone{opacity:.22;transform:scale(.78)}
+.hp.pulse{animation:hbeat .5s}
+@keyframes hbeat{0%,100%{transform:scale(1)}40%{transform:scale(1.5)}}
+#coinBox{color:var(--amber)}
+#hud .spacer{flex:1}
+#langBtn{
+  background:var(--card2);border:1px solid var(--line);border-radius:999px;
+  padding:4px 10px;font-size:13px;
+}
+#homeBtn{
+  background:var(--card2);border:1px solid var(--line);border-radius:999px;
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+
+
+/* ======================================================================
+   SCREEN SYSTEM
+   ----------------------------------------------------------------------
+   A .screen represents one major page of the game. JavaScript changes
+   which screen has the .on class so the player sees one page at a time.
+   ====================================================================== */
+/* ---------- screens ---------- */
+
+
+.screen{
+  flex:1;min-height:0;display:none;flex-direction:column;
+}
+.screen.on{display:flex}
+.scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 28px}
+
+
+/* ======================================================================
+   HOME SCREEN
+   ----------------------------------------------------------------------
+   The home screen is the game's main navigation menu.
+   ====================================================================== */
+/* ---------- home ---------- */
+#s-home .scroll{display:flex;flex-direction:column;justify-content:center;text-align:center}
+.logo{
+  font-size:clamp(38px,13vw,60px);font-weight:800;line-height:.92;
+  letter-spacing:-.02em;margin:0 0 2px;
+}
+.logo .l2{display:block;color:var(--amber);text-shadow:0 0 26px rgba(242,165,65,.4)}
+.tag{color:var(--dim);font-size:14px;font-weight:600;margin:6px 0 22px;line-height:1.5}
+.menu{display:flex;flex-direction:column;gap:10px;max-width:340px;width:100%;margin:0 auto}
+.mbtn{
+  display:flex;align-items:center;gap:12px;text-align:start;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px 15px;font-size:16px;transition:transform .12s,background .15s;
+}
+.mbtn:active{transform:scale(.975);background:#19404b}
+.mbtn .em{font-size:21px;width:26px;text-align:center;flex:0 0 auto}
+.mbtn .sub{display:block;font-size:11.5px;color:var(--dim);font-weight:600;margin-top:1px}
+.mbtn.primary{background:linear-gradient(160deg,var(--amber) 0%,var(--amber2) 100%);color:#241503;border-color:transparent}
+.mbtn.primary .sub{color:rgba(36,21,3,.66)}
+
+
+/* ======================================================================
+   LAB VISUAL AREA
+   ----------------------------------------------------------------------
+   These styles build the laboratory scene using normal HTML elements
+   and CSS shapes instead of requiring a game engine or canvas renderer.
+   ====================================================================== */
+/* ---------- lab ---------- */
+
+#s-lab{position:relative}
+#task{
+  flex:0 0 auto;margin:8px 12px 0;padding:9px 12px;
+  background:var(--card);border:1px solid var(--line);border-inline-start:3px solid var(--amber);
+  border-radius:10px;font-size:13px;line-height:1.35;
+}
+#task .tl{color:var(--amber);font-size:11px;display:block;margin-bottom:1px}
+#stage{
+  flex:1;min-height:0;position:relative;overflow:hidden;
+  margin:8px 0 0;
+  background:
+    radial-gradient(120% 80% at 50% 0%,#1a4855 0%,var(--wall) 45%,var(--wall2) 100%);
+}
+#stage.shake{animation:shk .32s linear infinite}
+@keyframes shk{
+  0%{transform:translate(0,0)}25%{transform:translate(-3px,2px)}
+  50%{transform:translate(3px,-2px)}75%{transform:translate(-2px,-2px)}
+  100%{transform:translate(0,0)}
+}
+.flicker{position:absolute;inset:0;background:rgba(180,230,240,.045);animation:flk 7s infinite;pointer-events:none}
+@keyframes flk{0%,96%,100%{opacity:1}97%{opacity:.25}98%{opacity:.9}99%{opacity:.35}}
+
+/* shelf on wall */
+.wallshelf{position:absolute;top:9%;left:0;right:0;height:34px}
+.wallshelf .board{position:absolute;bottom:0;left:6%;right:6%;height:5px;background:var(--bench2);border-radius:2px}
+.wallshelf .jar{position:absolute;bottom:5px;width:11px;height:19px;border-radius:2px 2px 3px 3px;opacity:.5}
+.hood{
+  position:absolute;top:14%;inset-inline-end:3%;width:26%;height:30%;
+  border:2px solid rgba(236,228,211,.2);border-radius:6px;
+  background:linear-gradient(180deg,rgba(120,200,220,.10),rgba(120,200,220,.02));
+}
+.hood .sash{position:absolute;left:0;right:0;top:0;background:rgba(160,220,235,.16);
+  border-bottom:2px solid rgba(236,228,211,.3);transition:height .4s;height:70%}
+.hood.open .sash{height:14%}
+.hood .lbl{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:8.5px;color:var(--dim)}
+.wallkit{position:absolute;top:15%;inset-inline-start:4%;display:flex;flex-direction:column;gap:9px;font-size:17px;opacity:.75}
+
+/* bench */
+.bench{position:absolute;left:0;right:0;bottom:0;height:26%;
+  background:linear-gradient(180deg,var(--bench3) 0 9px,var(--bench) 9px,var(--bench2) 100%);
+  border-top:2px solid #6b5340;
+}
+.bench::after{content:"";position:absolute;top:12px;left:8%;width:26%;height:2px;background:rgba(0,0,0,.32);border-radius:2px}
+.bench::before{content:"";position:absolute;top:22px;inset-inline-end:14%;width:16%;height:3px;background:rgba(0,0,0,.25);border-radius:2px;filter:blur(.4px)}
+
+/* character */
+#doc{position:absolute;bottom:24%;inset-inline-start:6%;width:74px;transition:transform .2s}
+#doc.panic{animation:jump .4s infinite}
+@keyframes jump{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* beaker */
+#beakerWrap{position:absolute;bottom:20%;left:50%;transform:translateX(-50%);width:132px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+#bubbles{position:absolute;inset:0;pointer-events:none}
+.bub{position:absolute;border-radius:50%;background:rgba(255,255,255,.62);animation:rise linear forwards}
+@keyframes rise{0%{transform:translateY(0) scale(.6);opacity:.9}100%{transform:translateY(-62px) scale(1.15);opacity:0}}
+.steam{position:absolute;bottom:56%;left:50%;width:15px;height:15px;border-radius:50%;
+  background:rgba(255,255,255,.3);filter:blur(4px);animation:steamUp 2s ease-out forwards}
+@keyframes steamUp{0%{transform:translate(-50%,0) scale(.5);opacity:.75}100%{transform:translate(-50%,-90px) scale(2.4);opacity:0}}
+#gasVeil{position:absolute;inset:0;background:radial-gradient(circle at 50% 70%,rgba(168,216,74,.55),rgba(168,216,74,0) 70%);opacity:0;transition:opacity .7s;pointer-events:none}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .45s}
+#fireLayer{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(circle at 50% 78%,rgba(242,120,40,.65),rgba(242,60,20,0) 62%)}
+
+/* speech */
+
+#say{
+  position:absolute;bottom:44%;inset-inline-start:4%;max-width:52%;
+  background:var(--bone);color:#16303a;border-radius:10px;padding:6px 9px;
+  font-size:11.5px;line-height:1.3;opacity:0;transition:opacity .25s;font-weight:700;
+}
+#say.on{opacity:1}
+
+
+/* ======================================================================
+   LAB CONTROLS
+   ----------------------------------------------------------------------
+   These styles control equipment buttons, reagent slots, the MIX button
+   and the horizontal reagent shelf at the bottom of the lab screen.
+   ====================================================================== */
+/* ---------- controls ---------- */
+
+
+#controls{flex:0 0 auto;background:var(--wall3);border-top:1px solid var(--line);padding:8px 10px 10px}
+.row{display:flex;gap:7px;align-items:center}
+.gear{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;
+  background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:5px 2px;
+  font-size:9.5px;color:var(--dim);transition:background .15s,border-color .15s,color .15s;
+}
+.gear .g{font-size:16px;filter:grayscale(1) opacity(.5);transition:filter .15s}
+.gear.on{background:#1d4a3a;border-color:#3f8f6a;color:#9fe0bd}
+.gear.on .g{filter:none}
+
+#slots{display:flex;gap:7px;margin:7px 0}
+.slot{
+  flex:1;height:46px;border-radius:10px;border:1.5px dashed rgba(236,228,211,.25);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  background:var(--card2);font-size:9px;color:var(--dim);position:relative;overflow:hidden;
+}
+.slot.filled{border-style:solid;border-color:var(--amber);color:var(--bone)}
+.slot .sym{font-size:15px;font-weight:800;line-height:1.05}
+.slot .nm{font-size:8.5px;opacity:.72;line-height:1.1;padding:0 3px;text-align:center}
+.slot .swatch{position:absolute;top:0;left:0;right:0;height:3px}
+#mixBtn{
+  flex:0 0 88px;height:46px;border-radius:10px;
+  background:linear-gradient(160deg,var(--amber),var(--amber2));color:#241503;
+  font-size:16px;font-weight:800;transition:transform .12s,filter .2s;
+}
+#mixBtn:disabled{filter:grayscale(.75) brightness(.62)}
+#mixBtn:active:not(:disabled){transform:scale(.95)}
+
+#shelf{display:flex;gap:6px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}
+#shelf::-webkit-scrollbar{display:none}
+.rg{
+  flex:0 0 auto;width:58px;border-radius:10px;background:var(--card);
+  border:1px solid var(--line);padding:5px 3px 4px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .12s,border-color .15s;
+}
+.rg:active{transform:scale(.93)}
+.rg.sel{border-color:var(--amber);background:#1c4351}
+.bottle{width:19px;height:26px;border-radius:3px 3px 5px 5px;position:relative;box-shadow:inset -3px 0 5px rgba(0,0,0,.3)}
+.bottle::before{content:"";position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:8px;height:5px;background:#7d6a55;border-radius:2px}
+.bottle .sh{position:absolute;top:3px;left:2.5px;width:2.5px;height:60%;background:rgba(255,255,255,.5);border-radius:2px}
+.rg .s{font-size:10.5px;font-weight:800;line-height:1.1}
+.rg .n{font-size:7.5px;color:var(--dim);line-height:1.05;text-align:center;height:17px;overflow:hidden}
+
+
+/* ======================================================================
+   EMERGENCY OVERLAY
+   ----------------------------------------------------------------------
+   When a dangerous reaction happens, this overlay asks the player to
+   choose the correct emergency action before the timer expires.
+   ====================================================================== */
+/* emergency */
+
+
+#emerg{
+  position:absolute;inset:0;background:rgba(8,26,32,.9);backdrop-filter:blur(2px);
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:60;padding:20px;
+}
+#emerg.on{display:flex}
+#emerg h3{margin:0;font-size:21px;color:var(--danger);text-align:center}
+#emerg p{margin:0;font-size:13px;color:var(--dim);text-align:center;max-width:280px;line-height:1.4}
+#timerBar{width:190px;height:7px;background:var(--card2);border-radius:4px;overflow:hidden}
+#timerFill{height:100%;width:100%;background:var(--danger);transition:width .1s linear}
+.erow{display:flex;gap:10px}
+.ebtn{
+  width:80px;height:80px;border-radius:16px;background:var(--card);border:1.5px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--dim);
+}
+.ebtn .e{font-size:29px}
+.ebtn:active{transform:scale(.94);border-color:var(--amber)}
+
+
+/* ======================================================================
+   RESULT SHEET
+   ----------------------------------------------------------------------
+   After mixing, this panel explains the result, equation, lesson and
+   changes to the player's game statistics.
+   ====================================================================== */
+/* ---------- result sheet ---------- */
+
+
+#sheet{
+  position:absolute;inset-inline:0;bottom:0;z-index:70;
+  background:var(--card);border-radius:20px 20px 0 0;border-top:2px solid var(--line);
+  transform:translateY(105%);transition:transform .34s cubic-bezier(.2,.9,.3,1);
+  max-height:82%;display:flex;flex-direction:column;
+}
+#sheet.on{transform:translateY(0)}
+#sheet .grab{width:38px;height:4px;border-radius:3px;background:rgba(236,228,211,.25);margin:8px auto 2px;flex:0 0 auto}
+#sheet .body{overflow-y:auto;padding:8px 16px 14px}
+#sheet .verdict{font-size:23px;font-weight:800;margin:2px 0 1px;display:flex;align-items:center;gap:7px}
+#sheet .eq{
+  font-size:13.5px;color:var(--bone);background:var(--card2);border:1px solid var(--line);
+  border-radius:9px;padding:7px 10px;margin:8px 0;direction:ltr;text-align:center;letter-spacing:.02em;
+}
+#sheet .why{font-size:13.5px;line-height:1.55;color:#cfdde2;font-weight:600}
+#sheet .why b{color:var(--amber);font-weight:800}
+#sheet .lesson{
+  margin-top:9px;padding:9px 11px;background:rgba(242,165,65,.09);
+  border-inline-start:3px solid var(--amber);border-radius:0 9px 9px 0;font-size:12.5px;line-height:1.5;
+}
+#sheet .deltas{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.delta{font-size:12px;border-radius:999px;padding:3px 10px;background:var(--card2);border:1px solid var(--line)}
+.delta.pos{color:var(--good)}.delta.neg{color:var(--danger)}
+#sheetBtns{display:flex;gap:8px;padding:0 16px 16px;flex:0 0 auto}
+.sbtn{flex:1;padding:12px;border-radius:11px;background:var(--card2);border:1px solid var(--line);font-size:14px}
+.sbtn.go{background:linear-gradient(160deg,var(--amber),var(--amber2));color:#241503;border-color:transparent}
+
+
+/* ======================================================================
+   REUSABLE CARD COMPONENTS
+   ----------------------------------------------------------------------
+   These styles are shared by levels, notebook entries and challenges.
+   Reusing classes keeps the visual design consistent across screens.
+   ====================================================================== */
+   
+
+h2.title{font-size:25px;margin:2px 0 3px;font-weight:800}
+p.lede{color:var(--dim);font-size:12.5px;margin:0 0 15px;line-height:1.5}
+.lvl{
+  display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:11px 12px;margin-bottom:8px;text-align:start;width:100%;
+}
+.lvl:active{transform:scale(.985)}
+.lvl.locked{opacity:.42}
+.lvl .num{
+  flex:0 0 34px;height:34px;border-radius:9px;background:var(--card2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;
+}
+.lvl.done .num{background:var(--good);color:#08221a;border-color:transparent}
+.lvl .t{flex:1;min-width:0}
+.lvl .t .a{font-size:14.5px;line-height:1.2}
+.lvl .t .b{font-size:11px;color:var(--dim);line-height:1.3;margin-top:2px}
+.lvl .st{font-size:16px;flex:0 0 auto}
+
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+.note .h{display:flex;align-items:center;gap:7px;font-size:14.5px}
+.note .eqn{font-size:12px;color:var(--amber);direction:ltr;margin:5px 0 4px;font-weight:700}
+.note .d{font-size:12.5px;color:#cfdde2;line-height:1.5;font-weight:600}
+.empty{text-align:center;color:var(--dim);font-size:13px;padding:44px 20px;line-height:1.6}
+
+.ch{display:flex;gap:11px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+.ch.done{border-color:rgba(95,208,138,.5);background:rgba(95,208,138,.07)}
+.ch .ci{font-size:22px;flex:0 0 auto}
+.ch .cb{flex:1;min-width:0}
+.ch .cn{font-size:14px}
+.ch .cd{font-size:11px;color:var(--dim);margin-top:1px;line-height:1.35}
+.bar{height:5px;background:var(--card2);border-radius:3px;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--amber);border-radius:3px;transition:width .4s}
+.ch .cr{font-size:12px;color:var(--amber);flex:0 0 auto;font-weight:800}
+
+
+/* ======================================================================
+   PERIODIC TABLE
+   ----------------------------------------------------------------------
+   The periodic table is rendered as a responsive grid. Each element
+   cell can be selected to open its information modal.
+   ====================================================================== */
+/* periodic */
+
+
+#ptWrap{flex:1;min-height:0;overflow:auto;padding:10px 12px 24px;-webkit-overflow-scrolling:touch}
+#pt{display:grid;grid-template-columns:repeat(18,30px);gap:2.5px;width:max-content;margin:0 auto}
+.el{
+  height:30px;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:10px;font-weight:800;line-height:1;color:#0b1c22;position:relative;
+}
+.el .z{position:absolute;top:1.5px;inset-inline-start:2.5px;font-size:6px;opacity:.65;font-weight:700}
+.el.have{outline:2px solid var(--amber);outline-offset:-2px}
+.legend{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:11px auto 0;max-width:420px}
+.lg{font-size:9.5px;padding:2.5px 7px;border-radius:999px;color:#0b1c22;font-weight:700}
+.ptnote{text-align:center;color:var(--dim);font-size:11px;margin-top:9px;line-height:1.5}
+
+#elModal{
+  position:absolute;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:22px;
+  background:rgba(8,26,32,.8);backdrop-filter:blur(3px);
+}
+#elModal.on{display:flex}
+#elCard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;width:100%;max-width:300px;text-align:center}
+#elCard .big{font-size:52px;font-weight:800;line-height:1}
+#elCard .nm{font-size:19px;margin-top:2px}
+#elCard .meta{color:var(--dim);font-size:12.5px;margin-top:7px;line-height:1.6}
+#elCard .cat{display:inline-block;margin-top:9px;font-size:11px;padding:3px 11px;border-radius:999px;color:#0b1c22;font-weight:700}
+
+#toast{
+  position:absolute;top:10px;left:50%;transform:translateX(-50%) translateY(-140%);
+  background:var(--amber);color:#241503;padding:9px 15px;border-radius:999px;font-size:13px;
+  z-index:90;transition:transform .35s;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.4);max-width:92%;
+}
+#toast.on{transform:translateX(-50%) translateY(0)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .flicker{display:none}
+}
+button:focus-visible,.el:focus-visible{outline:2.5px solid var(--amber);outline-offset:2px}
+@media (max-height:640px){
+  #beakerWrap{width:110px}
+  #doc{width:62px}
+  .rg{width:54px}
+  #task{font-size:12px;padding:7px 10px}
+}
+#task{display:flex;align-items:center;gap:8px}
+#task .tk{flex:1;min-width:0}
+#hintBtn{
+  flex:0 0 auto;width:27px;height:27px;border-radius:50%;
+  background:var(--card2);border:1px solid var(--amber);color:var(--amber);
+  font-size:14px;font-weight:800;line-height:1;
+}
+#hintBtn.on{background:var(--amber);color:#241503}
+.hintchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.hintchip{
+  display:flex;align-items:center;gap:5px;background:var(--card2);
+  border:1px solid var(--amber);border-radius:999px;padding:3px 9px;font-size:11px;
+}
+.hintchip i{width:9px;height:9px;border-radius:2px;display:block}
+.hintgear{font-size:11px;color:var(--amber);margin-top:5px}
+
+
+/* ======================================================================
+   GUIDE / WALKTHROUGH STYLES
+   ----------------------------------------------------------------------
+   The guide explains game controls and can reveal walkthrough answers.
+   ====================================================================== */
+/* guide */
+
+
+.gsec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:9px}
+.gsec h3{margin:0 0 3px;font-size:15px;color:var(--amber)}
+.gsec p{margin:0 0 7px;font-size:12.5px;line-height:1.55;color:#cfdde2;font-weight:600}
+.gstep{display:flex;gap:9px;align-items:flex-start;margin-bottom:7px}
+.gstep .n{
+  flex:0 0 20px;height:20px;border-radius:50%;background:var(--amber);color:#241503;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;margin-top:1px;
+}
+.gstep .x{flex:1;font-size:12.5px;line-height:1.5;color:#cfdde2;font-weight:600}
+.grow{display:flex;gap:9px;align-items:flex-start;margin-bottom:6px;font-size:12.5px;line-height:1.5;color:#cfdde2;font-weight:600}
+.grow .k{flex:0 0 76px;color:var(--bone);font-weight:800}
+.gwalk{width:100%;text-align:start;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-bottom:6px}
+.gwalk .q{font-size:13px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.gwalk .q b{color:var(--amber);font-weight:800}
+.gwalk .a{font-size:12px;color:#cfdde2;line-height:1.5;margin-top:6px;display:none;font-weight:600}
+.gwalk.open .a{display:block}
+
+
+/* ======================================================================
+   FIRST-TIME COACH
+   ----------------------------------------------------------------------
+   This small tutorial overlay teaches the player the basic interaction
+   flow before they start experimenting.
+   ====================================================================== */
+/* coach */
+
+
+#coach{position:absolute;inset:0;z-index:95;display:none;align-items:center;justify-content:center;
+  padding:24px;background:rgba(8,26,32,.86);backdrop-filter:blur(3px)}
+#coach.on{display:flex}
+#coachCard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;width:100%;max-width:320px}
+#coachCard .ch-step{font-size:11px;color:var(--amber);margin-bottom:3px}
+#coachCard h3{margin:0 0 6px;font-size:18px}
+#coachCard p{margin:0;font-size:13px;line-height:1.6;color:#cfdde2;font-weight:600}
+#coachCard .ch-btns{display:flex;gap:8px;margin-top:15px}
+
+[dir=rtl] #sheet .lesson{border-radius:9px 0 0 9px}
+[dir=rtl] .logo{letter-spacing:0}
+
+
+/* =========================================================
+   LAPTOP RESPONSIVE DESIGN
+   ========================================================= */
+
+/* Normal laptop screens */
+@media (min-width: 1024px) and (max-width: 1600px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .screen {
+        width: 100%;
+        min-height: 100vh;
+    }
+
+    /* Make the main content fit the laptop screen */
+    .home-grid,
+    .lab-layout,
+    .cards-grid {
+        max-width: 1300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Prevent very large elements */
+    .card,
+    .panel,
+    .lab-panel {
+        max-width: 100%;
+    }
+}
+
+
+/* =========================================================
+   SMALL LAPTOPS
+   Example: 1280 × 720
+   ========================================================= */
+
+@media (min-width: 1024px) and (max-width: 1300px) {
+
+    body {
+        font-size: 14px;
+    }
+
+    .app {
+        transform: none;
+        width: 100%;
+    }
+
+    .home-grid {
+        gap: 12px;
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+    .lab-layout {
+        gap: 12px;
+    }
+
+    button {
+        min-height: 40px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+}
+
+
+/* =========================================================
+   LAPTOP HEIGHT FIX
+   Example: 1366 × 768
+   ========================================================= */
+
+@media (min-width: 1024px) and (max-height: 800px) {
+
+    .screen {
+        min-height: 100vh;
+        height: auto;
+    }
+
+    header {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .card {
+        padding: 12px;
+    }
+
+    .panel {
+        padding: 12px;
+    }
+
+    .lab-area {
+        height: min(700px, 75vh);
+        min-height: 450px;
+    }
+
+    .hero {
+        min-height: auto;
+    }
+}
+
+
+/* =========================================================
+   VERY WIDE LAPTOP / DESKTOP
+   ========================================================= */
+
+@media (min-width: 1601px) {
+
+    .app {
+        max-width: 1500px;
+        margin: auto;
+    }
+}
+
+/* =========================================================
+   LAPTOP MODE
+   Optimised for 1024px - 1600px wide screens
+   ========================================================= */
+
+@media (min-width: 1024px) and (max-width: 1600px) {
+
+    /* Main application */
+    .app {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Main screens */
+    .screen {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Prevent horizontal scrolling */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+        gap: 8px;
+    }
+
+    /* Buttons */
+    button {
+        white-space: nowrap;
+    }
+
+    /* Cards */
+    .card {
+        box-sizing: border-box;
+    }
+
+    /* Images and game objects */
+    img,
+    canvas {
+        max-width: 100%;
+    }
+}
+
+
+/* =========================================================
+   1366 × 768 LAPTOP OPTIMISATION
+   ========================================================= */
+
+@media (min-width: 1024px) and (max-height: 800px) {
+
+    /* Reduce excessive vertical spacing */
+    .screen {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    header {
+        margin-bottom: 10px;
+    }
+
+    .card {
+        margin-bottom: 8px;
+    }
+
+    /* Keep game content inside the screen */
+    .lab-area {
+        max-height: 72vh;
+    }
+}
+
+
+/* ======================================================================
+   EXTRA RESPONSIVE COVERAGE — ALL SCREEN SIZES
+   ----------------------------------------------------------------------
+   Added so the game scales cleanly on every device class: small phones,
+   large phones, tablets in portrait/landscape, laptops, desktops,
+   ultra-wide monitors, and foldables — not just "phone vs laptop".
+   ====================================================================== */
+
+/* Very small phones (older/small-screen devices, e.g. iPhone SE) */
+@media (max-width: 360px){
+  #hud{padding:6px 8px;gap:6px}
+  .hud-pill{padding:3px 8px;font-size:12px}
+  .logo{font-size:clamp(30px,14vw,46px)}
+  .tag{font-size:12px;margin:4px 0 16px}
+  .mbtn{padding:11px 12px;font-size:14px}
+  .mbtn .em{font-size:18px;width:22px}
+}
+
+/* Short viewports (landscape phones, small laptops with browser chrome) */
+@media (max-height: 480px) and (orientation: landscape){
+  #hud{padding:4px 10px}
+  .scroll{padding:8px 10px 16px}
+  .logo{font-size:clamp(24px,8vw,36px);margin-bottom:0}
+  .tag{margin:2px 0 10px}
+}
+
+/* Tablets in portrait (e.g. iPad) */
+@media (min-width: 600px) and (max-width: 1023px) and (orientation: portrait){
+  #app{max-width:680px;margin:0 auto}
+  .menu{max-width:420px}
+  .logo{font-size:clamp(46px,10vw,68px)}
+}
+
+/* Tablets in landscape */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape){
+  #app{max-width:760px;margin:0 auto;height:100vh}
+}
+
+/* Ultra-wide / very large desktop monitors */
+@media (min-width: 1900px){
+  #app{max-width:1600px;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,.5)}
+  body{background:var(--wall2)}
+}
+
+/* Foldables / narrow tall screens (e.g. unfolded/folded states) */
+@media (max-width: 400px) and (min-height: 800px){
+  #app{max-width:100%}
+}
+
+/* Safe-area support for notches on all sides, all orientations */
+@media (orientation: landscape){
+  #app{
+    padding-left:max(env(safe-area-inset-left),8px);
+    padding-right:max(env(safe-area-inset-right),8px);
+  }
+}
+
+/* Prevent text/UI from becoming unreadably large on big phones held close */
+@media (min-width: 420px) and (max-width: 767px){
+  .logo{font-size:clamp(40px,11vw,56px)}
+}
+
+/* Ensure the game never overflows on extremely narrow widths (<280px) */
+@media (max-width: 280px){
+  .hud-pill{padding:2px 6px;font-size:10px}
+  .hud-pill .ic{font-size:11px}
+  #homeBtn,#langBtn{padding:3px 7px;font-size:11px}
+}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Lab Chaos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <div id="hud">
+    <div class="hud-pill" id="hearts"></div>
+    <div class="hud-pill" id="coinBox"><span class="ic">🪙</span><span id="coins">0</span></div>
+    <div class="hud-pill" id="safeBox"><span class="ic">🥽</span><span id="safety">100</span></div>
+    <div class="spacer"></div>
+    <button id="langBtn">عربي</button>
+    <button id="homeBtn">✕</button>
+  </div>
+
+
+  <!-- HOME -->
+
+  <section class="screen on" id="s-home">
+    <div class="scroll">
+      <h1 class="logo"><span class="l1" id="logo1">LAB</span><span class="l2" id="logo2">CHAOS</span></h1>
+      <p class="tag" id="tagline"></p>
+      <div class="menu">
+        <button class="mbtn primary" data-go="levels"><span class="em">🧪</span><span><span data-t="mStory"></span><span class="sub" data-t="mStorySub"></span></span></button>
+        <button class="mbtn" data-go="free"><span class="em">💥</span><span><span data-t="mFree"></span><span class="sub" data-t="mFreeSub"></span></span></button>
+        <button class="mbtn" data-go="challenges"><span class="em">🏆</span><span><span data-t="mCh"></span><span class="sub" data-t="mChSub"></span></span></button>
+        <button class="mbtn" data-go="notes"><span class="em">📓</span><span><span data-t="mNotes"></span><span class="sub" data-t="mNotesSub"></span></span></button>
+        <button class="mbtn" data-go="guide"><span class="em">📖</span><span><span data-t="mGuide"></span><span class="sub" data-t="mGuideSub"></span></span></button>
+        <button class="mbtn" data-go="pt"><span class="em">⚛️</span><span><span data-t="mPt"></span><span class="sub" data-t="mPtSub"></span></span></button>
+        <button class="mbtn" data-go="shop"><span class="em">❤️</span><span><span data-t="mShop"></span><span class="sub" data-t="mShopSub"></span></span></button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- LEVELS -->
+
+  <section class="screen" id="s-levels">
+    <div class="scroll">
+      <h2 class="title" data-t="lvTitle"></h2>
+      <p class="lede" data-t="lvLede"></p>
+      <div id="lvlList"></div>
+    </div>
+  </section>
+
+
+  <!-- LAB -->
+
+  <section class="screen" id="s-lab">
+    <div id="task">
+      <div class="tk"><span class="tl" id="taskLabel"></span><span id="taskText"></span></div>
+      <button id="hintBtn">?</button>
+    </div>
+    <div id="stage">
+      <div class="flicker"></div>
+      <div class="wallshelf"><div class="board"></div></div>
+      <div class="hood" id="hoodVis"><div class="sash"></div><div class="lbl" data-t="hoodLbl"></div></div>
+      <div class="wallkit"><span>🧯</span><span>🚿</span></div>
+      <div class="bench"></div>
+      <div id="doc"></div>
+      <div id="say"></div>
+      <div id="beakerWrap"><div id="beakerSvg"></div><div id="bubbles"></div></div>
+      <div id="fireLayer"></div>
+      <div id="gasVeil"></div>
+      <div id="flash"></div>
+      <div id="emerg">
+        <h3 id="emergTitle"></h3>
+        <p id="emergText"></p>
+        <div id="timerBar"><div id="timerFill"></div></div>
+        <div class="erow">
+          <button class="ebtn" data-e="ext"><span class="e">🧯</span><span data-t="eExt"></span></button>
+          <button class="ebtn" data-e="hood"><span class="e">🌬️</span><span data-t="eHood"></span></button>
+          <button class="ebtn" data-e="shower"><span class="e">🚿</span><span data-t="eShower"></span></button>
+        </div>
+      </div>
+      <div id="sheet">
+        <div class="grab"></div>
+        <div class="body">
+          <div class="verdict" id="vTitle"></div>
+          <div class="eq" id="vEq"></div>
+          <div class="why" id="vWhy"></div>
+          <div class="lesson" id="vLesson"></div>
+          <div class="deltas" id="vDeltas"></div>
+        </div>
+        <div id="sheetBtns">
+          <button class="sbtn" id="sAgain"></button>
+          <button class="sbtn go" id="sNext"></button>
+        </div>
+      </div>
+    </div>
+    <div id="controls">
+      <div class="row">
+        <button class="gear" data-gear="goggles"><span class="g">🥽</span><span data-t="gGoggles"></span></button>
+        <button class="gear" data-gear="gloves"><span class="g">🧤</span><span data-t="gGloves"></span></button>
+        <button class="gear" data-gear="hood"><span class="g">🌬️</span><span data-t="gHood"></span></button>
+        <button class="gear" data-gear="shield"><span class="g">🛡️</span><span data-t="gShield"></span></button>
+      </div>
+      <div id="slots">
+        <button class="slot" data-slot="0"></button>
+        <button class="slot" data-slot="1"></button>
+        <button id="mixBtn" disabled></button>
+      </div>
+      <div id="shelf"></div>
+    </div>
+  </section>
+
+
+  <!-- NOTES -->
+
+  <section class="screen" id="s-notes">
+    <div class="scroll">
+      <h2 class="title" data-t="nTitle"></h2>
+      <p class="lede" id="nLede"></p>
+      <div id="noteList"></div>
+    </div>
+  </section>
+
+
+  <!-- CHALLENGES -->
+
+  <section class="screen" id="s-challenges">
+    <div class="scroll">
+      <h2 class="title" data-t="cTitle"></h2>
+      <p class="lede" data-t="cLede"></p>
+      <div id="chList"></div>
+    </div>
+  </section>
+
+
+  <!-- SHOP -->
+
+  <section class="screen" id="s-shop">
+    <div class="scroll">
+      <h2 class="title" data-t="shTitle"></h2>
+      <p class="lede" data-t="shLede"></p>
+      <div id="shopList"></div>
+    </div>
+  </section>
+
+
+  <!-- GUIDE -->
+
+  <section class="screen" id="s-guide">
+    <div class="scroll">
+      <h2 class="title" data-t="guTitle"></h2>
+      <p class="lede" data-t="guLede"></p>
+      <div id="guideBody"></div>
+    </div>
+  </section>
+
+
+  <!-- PERIODIC -->
+
+  <section class="screen" id="s-pt">
+    <div style="padding:12px 14px 0"><h2 class="title" data-t="pTitle"></h2><p class="lede" data-t="pLede"></p></div>
+    <div id="ptWrap"><div id="pt"></div><div class="legend" id="ptLegend"></div><p class="ptnote" data-t="pNote"></p></div>
+    <div id="elModal"><div id="elCard"></div></div>
+  </section>
+
+  <div id="coach"><div id="coachCard">
+    <div class="ch-step" id="coachStep"></div>
+    <h3 id="coachTitle"></h3>
+    <p id="coachText"></p>
+    <div class="ch-btns">
+      <button class="sbtn" id="coachSkip"></button>
+      <button class="sbtn go" id="coachNext"></button>
+    </div>
+  </div></div>
+
+  <div id="toast"></div>
+</div>
+
+<!-- =================================================================== -->
+<!-- JAVASCRIPT SECTION: game data, state, rules, rendering and events   -->
+<!-- =================================================================== -->
+<script src="game.js"></script>
+</body>
+</html>
